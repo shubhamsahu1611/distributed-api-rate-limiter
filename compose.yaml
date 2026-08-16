@@ -1,0 +1,35 @@
+services:
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+
+  api-limiter:
+    build: .
+    environment:
+      PORT: 8080
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      REDIS_DB: ${REDIS_DB:-0}
+      ACTIVE_ALGORITHM: ${ACTIVE_ALGORITHM:-TOKEN_BUCKET}
+      RATE_LIMIT_WINDOW: ${RATE_LIMIT_WINDOW:-1m}
+      FREE_LIMIT: ${FREE_LIMIT:-10}
+      PREMIUM_LIMIT: ${PREMIUM_LIMIT:-100}
+      FREE_API_KEY: ${FREE_API_KEY:-free_demo_key}
+      PREMIUM_API_KEY: ${PREMIUM_API_KEY:-premium_demo_key}
+      FAIL_OPEN: ${FAIL_OPEN:-false}
+    ports:
+      - "8080:8080"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  redis-data:
