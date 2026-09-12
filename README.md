@@ -159,9 +159,13 @@ Optional integration tests exercise both Lua scripts against a Redis instance ex
 REDIS_TEST_ADDR=localhost:6379 go test ./internal/limiter -run AgainstRedis
 ```
 
-## Suggested interview demo
+## Usage examples
 
 1. Run the free-key loop and show HTTP 429 plus `Retry-After`.
 2. Call `/metrics` to show the blocked count and drop rate.
 3. repeat with the premium key to demonstrate tiering.
 4. Switch to `SLIDING_WINDOW`, recreate the container, and explain the tradeoff: more precise trailing-window enforcement in exchange for more Redis memory than Token Bucket.
+
+## Repository contents
+
+This repository includes source code, tests, dependency manifests, setup documentation, and required example data. Downloaded datasets, trained models, caches, generated reports, benchmark logs, and personal interview preparation are excluded. Result paths mentioned above are generated locally by the documented commands; previously reported measurements describe the original local runs.
